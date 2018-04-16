@@ -1,0 +1,18 @@
+
+<!-- saved from url=(0021)http://13.115.136.15/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php
+<br>&nbsp;&nbsp;&nbsp;&nbsp;$sandbox&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"sandbox/"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">md5</span><span style="color: #007700">(</span><span style="color: #DD0000">"orange"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">"REMOTE_ADDR"</span><span style="color: #007700">]);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;@</span><span style="color: #0000BB">mkdir</span><span style="color: #007700">(</span><span style="color: #0000BB">$sandbox</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;@</span><span style="color: #0000BB">chdir</span><span style="color: #007700">(</span><span style="color: #0000BB">$sandbox</span><span style="color: #007700">);
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">shell_exec</span><span style="color: #007700">(</span><span style="color: #DD0000">"GET&nbsp;"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">escapeshellarg</span><span style="color: #007700">(</span><span style="color: #0000BB">$_GET</span><span style="color: #007700">[</span><span style="color: #DD0000">"url"</span><span style="color: #007700">]));
+<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$info&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">pathinfo</span><span style="color: #007700">(</span><span style="color: #0000BB">$_GET</span><span style="color: #007700">[</span><span style="color: #DD0000">"filename"</span><span style="color: #007700">]);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$dir&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">str_replace</span><span style="color: #007700">(</span><span style="color: #DD0000">"."</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">""</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">basename</span><span style="color: #007700">(</span><span style="color: #0000BB">$info</span><span style="color: #007700">[</span><span style="color: #DD0000">"dirname"</span><span style="color: #007700">]));
+<br>&nbsp;&nbsp;&nbsp;&nbsp;@</span><span style="color: #0000BB">mkdir</span><span style="color: #007700">(</span><span style="color: #0000BB">$dir</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;@</span><span style="color: #0000BB">chdir</span><span style="color: #007700">(</span><span style="color: #0000BB">$dir</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;@</span><span style="color: #0000BB">file_put_contents</span><span style="color: #007700">(</span><span style="color: #0000BB">basename</span><span style="color: #007700">(</span><span style="color: #0000BB">$info</span><span style="color: #007700">[</span><span style="color: #DD0000">"basename"</span><span style="color: #007700">]),&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">highlight_file</span><span style="color: #007700">(</span><span style="color: #0000BB">__FILE__</span><span style="color: #007700">);
+<br></span>
+</span>
+</code></body></html>

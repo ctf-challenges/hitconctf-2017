@@ -1,0 +1,73 @@
+
+<!-- saved from url=(0021)http://13.115.31.205/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><code><span style="color: #000000">
+<span style="color: #0000BB">&lt;?php
+<br>&nbsp;&nbsp;&nbsp;&nbsp;$FLAG&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">create_function</span><span style="color: #007700">(</span><span style="color: #DD0000">""</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">'die(`/read_flag`);'</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$SECRET&nbsp;&nbsp;</span><span style="color: #007700">=&nbsp;`</span><span style="color: #DD0000">/read_secret</span><span style="color: #007700">`;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$SANDBOX&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"/var/www/data/"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">md5</span><span style="color: #007700">(</span><span style="color: #DD0000">"orange"&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">"REMOTE_ADDR"</span><span style="color: #007700">]);&nbsp;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;@</span><span style="color: #0000BB">mkdir</span><span style="color: #007700">(</span><span style="color: #0000BB">$SANDBOX</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;@</span><span style="color: #0000BB">chdir</span><span style="color: #007700">(</span><span style="color: #0000BB">$SANDBOX</span><span style="color: #007700">);
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!isset(</span><span style="color: #0000BB">$_COOKIE</span><span style="color: #007700">[</span><span style="color: #DD0000">"session-data"</span><span style="color: #007700">]))&nbsp;{
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">serialize</span><span style="color: #007700">(new&nbsp;</span><span style="color: #0000BB">User</span><span style="color: #007700">(</span><span style="color: #0000BB">$SANDBOX</span><span style="color: #007700">));
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$hmac&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">hash_hmac</span><span style="color: #007700">(</span><span style="color: #DD0000">"sha1"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$SECRET</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">setcookie</span><span style="color: #007700">(</span><span style="color: #DD0000">"session-data"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">sprintf</span><span style="color: #007700">(</span><span style="color: #DD0000">"%s-----%s"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$hmac</span><span style="color: #007700">));
+<br>&nbsp;&nbsp;&nbsp;&nbsp;}
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;</span><span style="color: #0000BB">User&nbsp;</span><span style="color: #007700">{
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;</span><span style="color: #0000BB">$avatar</span><span style="color: #007700">;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">__construct</span><span style="color: #007700">(</span><span style="color: #0000BB">$path</span><span style="color: #007700">)&nbsp;{
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$this</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">avatar&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$path</span><span style="color: #007700">;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+<br>&nbsp;&nbsp;&nbsp;&nbsp;}
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;</span><span style="color: #0000BB">Admin&nbsp;</span><span style="color: #007700">extends&nbsp;</span><span style="color: #0000BB">User&nbsp;</span><span style="color: #007700">{
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">__destruct</span><span style="color: #007700">(){
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$random&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">bin2hex</span><span style="color: #007700">(</span><span style="color: #0000BB">openssl_random_pseudo_bytes</span><span style="color: #007700">(</span><span style="color: #0000BB">32</span><span style="color: #007700">));
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eval(</span><span style="color: #DD0000">"function&nbsp;my_function_</span><span style="color: #0000BB">$random</span><span style="color: #DD0000">()&nbsp;{"
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.</span><span style="color: #DD0000">"&nbsp;&nbsp;global&nbsp;\$FLAG;&nbsp;\$FLAG();"
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #007700">.</span><span style="color: #DD0000">"}"</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$_GET</span><span style="color: #007700">[</span><span style="color: #DD0000">"lucky"</span><span style="color: #007700">]();
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+<br>&nbsp;&nbsp;&nbsp;&nbsp;}
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">check_session</span><span style="color: #007700">()&nbsp;{
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;</span><span style="color: #0000BB">$SECRET</span><span style="color: #007700">;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$_COOKIE</span><span style="color: #007700">[</span><span style="color: #DD0000">"session-data"</span><span style="color: #007700">];
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list(</span><span style="color: #0000BB">$data</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$hmac</span><span style="color: #007700">)&nbsp;=&nbsp;</span><span style="color: #0000BB">explode</span><span style="color: #007700">(</span><span style="color: #DD0000">"-----"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">2</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(!isset(</span><span style="color: #0000BB">$data</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$hmac</span><span style="color: #007700">)&nbsp;||&nbsp;!</span><span style="color: #0000BB">is_string</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">)&nbsp;||&nbsp;!</span><span style="color: #0000BB">is_string</span><span style="color: #007700">(</span><span style="color: #0000BB">$hmac</span><span style="color: #007700">))
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #DD0000">"Bye"</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(&nbsp;!</span><span style="color: #0000BB">hash_equals</span><span style="color: #007700">(</span><span style="color: #0000BB">hash_hmac</span><span style="color: #007700">(</span><span style="color: #DD0000">"sha1"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$SECRET</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">$hmac</span><span style="color: #007700">)&nbsp;)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #DD0000">"Bye&nbsp;Bye"</span><span style="color: #007700">);
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">unserialize</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(&nbsp;!isset(</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">avatar</span><span style="color: #007700">)&nbsp;)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #DD0000">"Bye&nbsp;Bye&nbsp;Bye"</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">avatar</span><span style="color: #007700">;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;}
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">upload</span><span style="color: #007700">(</span><span style="color: #0000BB">$path</span><span style="color: #007700">)&nbsp;{
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">file_get_contents</span><span style="color: #007700">(</span><span style="color: #0000BB">$_GET</span><span style="color: #007700">[</span><span style="color: #DD0000">"url"</span><span style="color: #007700">]&nbsp;.&nbsp;</span><span style="color: #DD0000">"/avatar.gif"</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">substr</span><span style="color: #007700">(</span><span style="color: #0000BB">$data</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">6</span><span style="color: #007700">)&nbsp;!==&nbsp;</span><span style="color: #DD0000">"GIF89a"</span><span style="color: #007700">)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #DD0000">"Fuck&nbsp;off"</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">file_put_contents</span><span style="color: #007700">(</span><span style="color: #0000BB">$path&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"/avatar.gif"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #DD0000">"Upload&nbsp;OK"</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;}
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;</span><span style="color: #0000BB">show</span><span style="color: #007700">(</span><span style="color: #0000BB">$path</span><span style="color: #007700">)&nbsp;{
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(&nbsp;!</span><span style="color: #0000BB">file_exists</span><span style="color: #007700">(</span><span style="color: #0000BB">$path&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"/avatar.gif"</span><span style="color: #007700">)&nbsp;)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$path&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"/var/www/html"</span><span style="color: #007700">;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">header</span><span style="color: #007700">(</span><span style="color: #DD0000">"Content-Type:&nbsp;image/gif"</span><span style="color: #007700">);
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;die(</span><span style="color: #0000BB">file_get_contents</span><span style="color: #007700">(</span><span style="color: #0000BB">$path&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"/avatar.gif"</span><span style="color: #007700">));
+<br>&nbsp;&nbsp;&nbsp;&nbsp;}
+<br>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$mode&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$_GET</span><span style="color: #007700">[</span><span style="color: #DD0000">"m"</span><span style="color: #007700">];
+<br>&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$mode&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #DD0000">"upload"</span><span style="color: #007700">)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">upload</span><span style="color: #007700">(</span><span style="color: #0000BB">check_session</span><span style="color: #007700">());
+<br>&nbsp;&nbsp;&nbsp;&nbsp;else&nbsp;if&nbsp;(</span><span style="color: #0000BB">$mode&nbsp;</span><span style="color: #007700">==&nbsp;</span><span style="color: #DD0000">"show"</span><span style="color: #007700">)
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">show</span><span style="color: #007700">(</span><span style="color: #0000BB">check_session</span><span style="color: #007700">());
+<br>&nbsp;&nbsp;&nbsp;&nbsp;else
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">highlight_file</span><span style="color: #007700">(</span><span style="color: #0000BB">__FILE__</span><span style="color: #007700">);
+<br></span>
+</span>
+</code></body></html>
